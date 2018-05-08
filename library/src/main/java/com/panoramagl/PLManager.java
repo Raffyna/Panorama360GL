@@ -26,6 +26,7 @@ import android.hardware.SensorManager;
 import android.opengl.GLSurfaceView;
 import android.os.Handler;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Display;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnDoubleTapListener;
@@ -694,6 +695,7 @@ public class PLManager implements PLIView, SensorEventListener, OnDoubleTapListe
 		if(mIsRendererCreated && mRenderer.isRunning() && mPanorama != null) {
 			if(!mIsValidForFov)
 				mPanorama.getCamera().rotate(this, mStartPoint, mEndPoint);
+			mStartPoint.setValues(mEndPoint);
 			mGLSurfaceView.requestRender();
 			return true;
 		}
