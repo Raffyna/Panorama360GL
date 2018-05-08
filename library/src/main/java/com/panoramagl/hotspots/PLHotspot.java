@@ -279,11 +279,21 @@ public class PLHotspot extends PLSceneElementBase implements PLIHotspot
 	@Override
 	public void setX(float x)
 	{
+		if(this.getX() != x)
+		{
+			super.setX(x);
+			hasChangedCoordProperty = true;
+		}
 	}
 	
 	@Override
 	public void setY(float y)
 	{
+		if(this.getY() != y)
+		{
+			super.setY(y);
+			hasChangedCoordProperty = true;
+		}
 	}
 	
 	@Override
@@ -339,9 +349,9 @@ public class PLHotspot extends PLSceneElementBase implements PLIHotspot
 		//1
 		PLPosition pos = this.convertPitchAndYawToPosition(mAtv, mAth), pos1 = this.convertPitchAndYawToPosition(mAtv + 0.0001f, mAth);
 		//2 and 3
-		PLVector3 p1 = new PLVector3(pos.x, pos.y, pos.z),
+		PLVector3 p1 = new PLVector3(this.getX(), this.getY(), this.getZ()),
 				  p2p1 = new PLVector3(0.0f, 0.0f, 0.0f).sub(p1),
-				  r = p2p1.crossProduct(new PLVector3(pos1.x, pos1.y, pos1.z).sub(p1)),
+				  r = p2p1.crossProduct(new PLVector3(this.getX(), this.getY()+1f, this.getZ()).sub(p1)),
 				  s = p2p1.crossProduct(r);
 		//4
 		r.normalize();
