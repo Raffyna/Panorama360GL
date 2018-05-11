@@ -497,7 +497,7 @@ public abstract class PLPanoramaBase extends PLSceneBase implements PLIPanorama
 	/**collision methods*/
 	
 	@Override
-	protected int checkCollisionsWithRay(GL10 gl, PLVector3[] ray, CGPoint screenPoint, boolean isMoving)
+	public int checkCollisionsWithRay(GL10 gl, PLVector3[] ray, CGPoint screenPoint, boolean isMoving)
 	{
 		return (super.checkCollisionsWithRay(gl, ray, screenPoint, isMoving) + this.checkSceneElementsCollisionWithRay(gl, mHotspots, ray, screenPoint, isMoving));
 	}
