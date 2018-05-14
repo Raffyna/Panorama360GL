@@ -409,8 +409,8 @@ public abstract class PLSceneBase extends PLRenderableElementBase implements PLI
 	}
 	
 	/**collision methods*/
-	
-	protected void createRayWithPoint(GL10 gl, PLIRenderer renderer, CGPoint point, PLVector3[] ray)
+
+	public void createRayWithPoint(GL10 gl, PLIRenderer renderer, CGPoint point, PLVector3[] ray)
 	{
 		CGRect viewport = renderer.getViewport();
 		mViewport[0] = viewport.x;

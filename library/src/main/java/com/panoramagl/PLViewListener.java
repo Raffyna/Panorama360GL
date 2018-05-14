@@ -213,7 +213,11 @@ public abstract class PLViewListener
 	public void onDidOutHotspot(PLIView view, PLIHotspot hotspot, CGPoint screenPoint, PLPosition scene3DPoint)
 	{
 	}
-	
+
+	public void onRender(float dt){
+
+	}
+
 	/**transition methods*/
 	
 	public void onDidBeginTransition(PLIView view, PLITransition transition)
