@@ -18,7 +18,9 @@
 
 package com.panoramagl;
 
+import android.opengl.Matrix;
 import android.os.Handler;
+import android.util.Log;
 
 import com.panoramagl.computation.PLIntersection;
 import com.panoramagl.computation.PLVector3;
@@ -37,6 +39,8 @@ import java.util.List;
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
 
+import static android.opengl.GLU.gluProject;
+
 public abstract class PLSceneBase extends PLRenderableElementBase implements PLIScene
 {
 	/**member variables*/
@@ -51,6 +55,7 @@ public abstract class PLSceneBase extends PLRenderableElementBase implements PLI
 	private PLCollisionData mCollisionData;
 	
 	private MatrixGrabber mMatrixGrabber;
+	private float[] mMP;
 	private float[] mModelMatrix, mProjectionMatrix;
 	private int[] mViewport;
 	private float[] mPosition;
@@ -70,6 +75,7 @@ public abstract class PLSceneBase extends PLRenderableElementBase implements PLI
 		mMatrixGrabber = new MatrixGrabber();
 		mModelMatrix = mMatrixGrabber.mModelView;
 		mProjectionMatrix = mMatrixGrabber.mProjection;
+		mMP = new float[16];
 		mViewport = new int[4];
 		mPosition = new float[3];
 		mIsLocked = mIsWaitingForClick = false;
@@ -89,7 +95,37 @@ public abstract class PLSceneBase extends PLRenderableElementBase implements PLI
 			mCamera.reset();
 		}
 	}
-	
+
+	public boolean point3DToPosition2D(PLPosition position,CGPoint result,GL10 gl) {
+
+		float[] pos = {position.x,position.y,position.z,1};
+		float[] res = new float[4];
+
+		CGRect viewport = mView.getRenderingViewport();
+		int viewHeight = mView.getGLSurfaceView().getHeight();
+		int viewWidth = mView.getGLSurfaceView().getWidth();
+
+		mViewport[0] = viewport.x;
+		mViewport[1] = viewport.y;
+		mViewport[2] = viewport.width;
+		mViewport[3] = viewport.height;
+
+		this.updateMatrixes(gl);
+		Matrix.multiplyMM(mMP,0,mProjectionMatrix,0, mModelMatrix,0);
+		Matrix.multiplyMV(res,0,mMP,0,pos,0);
+
+		//normalized point to viewport
+		gluProject(position.x,position.y,position.z,mModelMatrix,0,mProjectionMatrix,0,mViewport,0,res,0);
+
+		res[1]=viewHeight-res[1];
+		result.setValues(res[0],res[1]);
+
+		if(res[0]>viewWidth || res[0]<0) return false;
+		if(res[1]>viewHeight || res[1]<0) return false;
+
+		return true;
+	}
+
 	@Override
 	public void resetAlpha()
 	{
@@ -360,8 +396,8 @@ public abstract class PLSceneBase extends PLRenderableElementBase implements PLI
 	}
 	
 	/**matrix methods*/
-	
-	protected void updateMatrixes(GL10 gl)
+
+	public void updateMatrixes(GL10 gl)
 	{
 		if(PLOpenGLSupport.isHigherThanOpenGL1(gl))
 		{

@@ -1,1 +1,1 @@
-include ':sample', ':simplepanorama', ':example', ':library'
+include ':SimplePanoramaSample', ':simplepanorama', ':PanoramaGLExample', ':PanoramaGLLibrary'
